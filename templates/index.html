@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Погода в городах</title>
+    <style>
+      body {
+        font-family: Arial;
+        margin: 40px;
+        background: #f0f0f0;
+      }
+      .container {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+      }
+      h1 {
+        color: #333;
+      }
+      .btn {
+        padding: 10px 15px;
+        margin: 5px;
+        border: none;
+        cursor: pointer;
+      }
+      .btn-update {
+        background: #4caf50;
+        color: white;
+      }
+      .btn-reset {
+        background: #2196f3;
+        color: white;
+      }
+      .btn-remove {
+        background: #f44336;
+        color: white;
+        padding: 5px 10px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+      th,
+      td {
+        padding: 10px;
+        border: 1px solid #ddd;
+        text-align: left;
+      }
+      th {
+        background: #f5f5f5;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>☀️ Погода в городах</h1>
+
+      <div>
+        <form action="/cities/update" method="post" style="display: inline">
+          <button type="submit" class="btn btn-update">
+            🔄 Обновить погоду
+          </button>
+        </form>
+        <form action="/cities/reset" method="post" style="display: inline">
+          <button type="submit" class="btn btn-reset">
+            📋 Сбросить список
+          </button>
+        </form>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Город</th>
+            <th>Температура</th>
+            <th>Обновлено</th>
+            <th>Действие</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for city in cities %}
+          <tr>
+            <td>{{ city.name }}</td>
+            <td>
+              {% if city.temperature %} {{ "%.1f"|format(city.temperature) }} °C
+              {% else %}
+              <em>Нет данных</em>
+              {% endif %}
+            </td>
+            <td>
+              {% if city.updated_at %} {{ city.updated_at.strftime('%d.%m.%Y
+              %H:%M') }} {% else %}
+              <em>Никогда</em>
+              {% endif %}
+            </td>
+            <td>
+              <form
+                action="/cities/remove/{{ city.id }}"
+                method="post"
+                style="display: inline"
+              >
+                <button type="submit" class="btn-remove">Удалить</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>
