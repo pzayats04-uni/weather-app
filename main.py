@@ -196,24 +196,6 @@ async def update_weather(db: Session = Depends(get_db)):
     print("="*50)
     return RedirectResponse("/", status_code=303)
 
-#ТЕСТОВЫЙ ЭНДПОИНТ
-@app.get("/test-api")
-async def test_api():
-    """Тестируем API прямо из браузера"""
-    test_url = "https://api.open-meteo.com/v1/forecast?latitude=55.7558&longitude=37.6173&current_weather=true"
-    
-    try:
-        async with aiohttp.ClientSession() as session:
-            async with session.get(test_url, timeout=10) as response:
-                data = await response.json()
-                return {
-                    "status": response.status,
-                    "data": data,
-                    "temperature": data.get('current_weather', {}).get('temperature')
-                }
-    except Exception as e:
-        return {"error": str(e)}
-
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="127.0.0.1", port=8000, reload=True)
